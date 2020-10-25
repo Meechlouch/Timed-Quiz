@@ -1,0 +1,16 @@
+body {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.timer {
+    font-size: 24px;
+    color: crimson;
+    float: right;
+
+}
+
+.center {
+    margin: auto;
+    width: 50%;
+}
+
