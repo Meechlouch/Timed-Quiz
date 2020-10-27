@@ -1,4 +1,4 @@
-// create variables to
+// create an arr of obj for Q&A
 let questions = [
     {
         question: "How many days are in a year?",
@@ -28,34 +28,69 @@ let questions = [
 ];
 
 // create variables that reference DOM elements
-//let questionEl = document.querySelector("#questions");
+
 let timeEl = document.querySelector("#timeLeft");
-let startQuizEl = document.querySelector("#startBtn");
-//let answerEl = document.querySelector("#answers");
+let startQuizBtn = document.querySelector("#startBtn");
+let answersEl = document.querySelector("#choiceOpts");
 
+//create variable that will set timer 
 let countdown = questions.length  * 12;
-
-function startQuiz() {
-    startTimer();
-
-}
-
-
-
-function startTimer() {
-    setInterval(function() {
-        countdown--;
-        timeEl.textContent = countdown;
-    }, 1000);
-    if(countdown <= 0) {
-        clearInterval(timeEl);
-    }
-}
+//create variable that will be used as an index ittirator to the array of questions
+let i = 0;
+//create variable that will clear timer 
+let clearTimer;
 
 
 
 
 // button is clicked for test to begin
+startQuizBtn.addEventListener("click", startTimer);
 
-startBtn.addEventListener("click", startQuiz);
-    
+//function is called to start  timer and ask series of questions   
+function startTimer() {
+    clearTimer = setInterval(function() {
+        countdown--;
+        timeEl.textContent = countdown;
+
+        if(countdown <= 0) {
+            timeEl.textContent = "";
+            clearInterval(clearTimer);
+        }
+    }, 1000); 
+    startQuestions();
+}
+
+//function created to get questions for quiz
+function startQuestions() {
+//variable created to itterate through the questions array    
+    let questionNow = questions[i];
+
+//add question to id
+    questionEl = document.querySelector("#questionSection");
+    questionEl.textContent = questionNow.question;
+//answer buttons will not make replicas when start button is pushed
+    answersEl.innerHTML = "";
+//loop through array answers
+    questionNow.answers.forEach(function(ans, ind) {
+//create buttons for each answer
+        let answersBtns = document.createElement("button");
+//answersBtns.setAttribute("class", "ans");
+        answersBtns.setAttribute("value", ans);
+        answersBtns.textContent = ind + 1 +") " + ans;
+        answersEl.appendChild(answersBtns);
+        answersBtns.addEventListener("click", answersPressed);
+    });
+}
+
+function answersPressed() {
+    if (this.value !== questions[i].correctAns) {
+        countdown -= 10;
+    }
+    i++
+    if (i === questions.length) {
+        console.log("Over");
+        clearInterval(timeEl);
+    } else {
+        startQuestions();
+    }
+}
