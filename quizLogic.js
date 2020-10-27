@@ -39,6 +39,7 @@ let countdown = questions.length  * 12;
 let i = 0;
 //create variable that will clear timer 
 let clearTimer;
+let finishMessage = "Your score is: " + timeEl;
 
 
 
@@ -46,15 +47,14 @@ let clearTimer;
 // button is clicked for test to begin
 startQuizBtn.addEventListener("click", startTimer);
 
-//function is called to start  timer and ask series of questions   
+//function is called to start timer   
 function startTimer() {
     clearTimer = setInterval(function() {
         countdown--;
         timeEl.textContent = countdown;
 
         if(countdown <= 0) {
-            timeEl.textContent = "";
-            clearInterval(clearTimer);
+            quizFinished();
         }
     }, 1000); 
     startQuestions();
@@ -86,11 +86,20 @@ function answersPressed() {
     if (this.value !== questions[i].correctAns) {
         countdown -= 10;
     }
-    i++
+
+    i++;
+
     if (i === questions.length) {
-        console.log("Over");
-        clearInterval(timeEl);
+        quizFinished();
     } else {
         startQuestions();
     }
+    
+}
+
+function quizFinished() {
+    let finishMessage = "Your score is: " + countdown;
+    clearInterval(clearTimer);
+    scoreMessage = document.querySelector("#userScore");
+    scoreMessage.textContent = finishMessage;
 }
