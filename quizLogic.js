@@ -27,11 +27,22 @@ let questions = [
     }
 ];
 
-// create variables that reference DOM elements
+let body = document.body;
 
-let timeEl = document.querySelector("#timeLeft");
-let startQuizBtn = document.querySelector("#startBtn");
-let answersEl = document.querySelector("#choiceOpts");
+// create variables that reference DOM elements
+let inputInitials = document.querySelector("#initials");
+let saveBtn = document.querySelector("#submit");
+let timeLeftId = document.querySelector("#timeLeft");
+let startQuizBtnId = document.querySelector("#startBtn");
+let answersId = document.querySelector("#choiceOpts");
+let input = document.createElement("input");
+    input.type = "text";
+    input.id = "initials";
+    input.max = "3";
+    input.placeholder = "Enter your initials here!";
+let submitId = document.createElement("button");
+    submitId.id = "submit";
+    submitId.innerText = "Save";
 
 //create variable that will set timer 
 let countdown = questions.length  * 12;
@@ -39,19 +50,15 @@ let countdown = questions.length  * 12;
 let i = 0;
 //create variable that will clear timer 
 let clearTimer;
-let finishMessage = "Your score is: " + timeEl;
 
-
-
-
-// button is clicked for test to begin
-startQuizBtn.addEventListener("click", startTimer);
+// event listeners added for buttons
+startQuizBtnId.addEventListener("click", startTimer);
 
 //function is called to start timer   
 function startTimer() {
     clearTimer = setInterval(function() {
         countdown--;
-        timeEl.textContent = countdown;
+        timeLeftId.textContent = countdown;
 
         if(countdown <= 0) {
             quizFinished();
@@ -66,10 +73,10 @@ function startQuestions() {
     let questionNow = questions[i];
 
 //add question to id
-    questionEl = document.querySelector("#questionSection");
-    questionEl.textContent = questionNow.question;
+    questionId = document.querySelector("#questionSection");
+    questionId.textContent = questionNow.question;
 //answer buttons will not make replicas when start button is pushed
-    answersEl.innerHTML = "";
+    answersId.innerHTML = "";
 //loop through array answers
     questionNow.answers.forEach(function(ans, ind) {
 //create buttons for each answer
@@ -77,7 +84,7 @@ function startQuestions() {
 //answersBtns.setAttribute("class", "ans");
         answersBtns.setAttribute("value", ans);
         answersBtns.textContent = ind + 1 +") " + ans;
-        answersEl.appendChild(answersBtns);
+        answersId.appendChild(answersBtns);
         answersBtns.addEventListener("click", answersPressed);
     });
 }
@@ -88,18 +95,37 @@ function answersPressed() {
     }
 
     i++;
+    timeLeftId.textContent = countdown;
 
     if (i === questions.length) {
+        clearInterval(clearTimer);
         quizFinished();
     } else {
         startQuestions();
     }
-    
 }
 
 function quizFinished() {
     let finishMessage = "Your score is: " + countdown;
-    clearInterval(clearTimer);
     scoreMessage = document.querySelector("#userScore");
     scoreMessage.textContent = finishMessage;
+    let inputParent = document.createElement("div");
+    body.appendChild(inputParent)
+    inputParent.appendChild(input);
+    inputParent.appendChild(submitId);
+    saveScore();
 }
+
+function saveScore() {
+    saveBtn = document.querySelector("#submit");
+    saveBtn.addEventListener("click", function(event) {
+        event.preventDefault();
+        
+        let saveInitials = document.querySelector("#initials").value;
+        localStorage.setItem("initials", saveInitials);
+
+    })
+}
+  
+
+ 
